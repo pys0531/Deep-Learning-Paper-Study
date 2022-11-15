@@ -9,7 +9,6 @@ def main():
 
     for epoch in range(cfg.epochs):
         train(epoch, trainer, cfg)
-        quit()
 
 if __name__ == "__main__":
     main()

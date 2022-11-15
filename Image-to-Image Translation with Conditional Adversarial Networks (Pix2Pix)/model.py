@@ -73,6 +73,8 @@ class UNet(nn.Module):
                          nn.Tanh()
                      )
 
+        self.weights_init_normal()
+
     def forward(self, x):
         d1 = self.down1(x)
         d2 = self.down2(d1)
@@ -92,6 +94,16 @@ class UNet(nn.Module):
         u7 = self.up7(u6, d1)
 
         return self.final(u7)
+
+    def weights_init_normal(self, ):
+        m = self.modules()
+        classname = m.__class__.__name__
+        if classname.find("Conv") != -1:
+            nn.init.normal_(m.weight.data, 0.0, 0.02)
+        elif classname.find("BatchNorm2d") != -1:
+            nn.init.normal_(m.weight.data, 1.0, 0.02)
+            nn.init.constant_(m.bias.data, 0.0)
+
 
 
 
@@ -113,6 +125,8 @@ class Discriminator(nn.Module):
                          nn.Conv2d(512, 1, 4, padding = 1)
                      )
 
+        self.weights_init_normal()
+
     def forward(self, img_A, img_B):
         img_input = torch.cat((img_A, img_B), 1)
 
@@ -123,6 +137,14 @@ class Discriminator(nn.Module):
 
         return self.final(d4) # [1 X 16 X 16]
 
+    def weights_init_normal(self, ):
+        m = self.modules()
+        classname = m.__class__.__name__
+        if classname.find("Conv") != -1:
+            nn.init.normal_(m.weight.data, 0.0, 0.02)
+        elif classname.find("BatchNorm2d") != -1:
+            nn.init.normal_(m.weight.data, 1.0, 0.02)
+            nn.init.constant_(m.bias.data, 0.0)
 
 
 
