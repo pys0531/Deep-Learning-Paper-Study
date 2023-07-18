@@ -36,14 +36,20 @@ ${CLASSIFIER_ROOT}
 
 
 ### Train
+change the config file to the model befor training
 ```
 cd main
 python train.py
 ```
 
-
 ### Test
 ```
 cd main
 python test.py --test_epoch {epoch_num}
+```
+
+### Onnx Convert
+```
+cd main
+python onnx_convertor.py
 ```
