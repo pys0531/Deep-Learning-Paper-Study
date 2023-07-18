@@ -19,7 +19,7 @@ class Config():
     optim_list = {0: 'sgd', 1: 'adam'}
     optim_type = optim_list[0]
     momentum = 0.9
-    weight_decay = 1e-4
+    weight_decay = 5e-4
     
     
     ## Dateset Info
