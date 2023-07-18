@@ -29,4 +29,7 @@ ${CLASSIFIER_ROOT}
 |-- model_dump
 |   |-- snapshot_0.pth.tar
 |   |-- snapshot_1.pth.tar
+.
+.
+.
 ```
