@@ -35,4 +35,15 @@ ${CLASSIFIER_ROOT}
 ```
 
 
-### Run
+### Train
+```
+cd main
+python train.py
+```
+
+
+### Test
+```
+cd main
+python test.py --test_epoch {epoch_num}
+```
