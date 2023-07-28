@@ -9,6 +9,20 @@ ${CLASSIFIER_ROOT}
 ```
 
 
+### Networks structure
+```
+${CLASSIFIER_ROOT}
+|-- common
+|   |-- networks
+|   |   |-- CNN.py
+|   |   |-- Resnet.py
+|   |   |-- etc..
+.
+.
+.
+```
+
+
 ### Directory structure
 
 ```
