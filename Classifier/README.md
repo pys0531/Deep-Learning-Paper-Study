@@ -17,9 +17,6 @@ ${CLASSIFIER_ROOT}
 |   |   |-- CNN.py
 |   |   |-- Resnet.py
 |   |   |-- etc..
-.
-.
-.
 ```
 
 
