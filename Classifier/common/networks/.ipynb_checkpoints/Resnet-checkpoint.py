@@ -1,10 +1,25 @@
 import torch
 import torch.nn as nn
+from torchvision import models
+
 from networks.modules import ConvBlock, BasicBlock, Bottleneck
 from config import cfg
 
+## Accuracy with CosineAnnealingWarmupRestarts ##
+# Model | Type   | Dataset | Acc
+# Resnet cifar10 'cifar10': 91.33 (Adam / lr: 1-e3)
+# Resnet cifar10 'cifar10': 92.64 (Sgd / lr: 0.1)
+# Resnet 50      'stl10' : 70.36 (Adam / lr: 1-e3)
+# Resnet 50      'stl10' : 70.13 (Sgd / lr: 0.1)
+
+## Pretrained ##
+# Resnet 50      'cifar10' : 89.49 (Adam / lr: 1-e3) epoch 25
+# Resnet 50      'stl10'   : 88.43 (Adam / lr: 1-e3) epoch 25
+
+##
+
 class Resnet(nn.Module):
-    def __init__(self):
+    def __init__(self, pretrain = True):
         super(Resnet, self).__init__()
         class_num = cfg.class_num
         
@@ -46,18 +61,19 @@ class Resnet(nn.Module):
         self.fc = nn.Linear(channel[-1] * block.expansion, class_num)
         
         
-        ## Init Weight ##
+        ## Init Weight ##        
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.normal_(m.weight, mean=0, std=0.001)
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
+                
         
     def _make_layer(self, block, planes, layer, stride = 1):
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
-            downsample = ConvBlock(self.inplanes, planes * block.expansion, 1, stride, bias = False, is_activation = False)
+            downsample = ConvBlock(self.inplanes, planes * block.expansion, 1, stride, bias = False, activation = None)
         
         layers = []
         layers.append(block(self.inplanes, planes, stride, downsample = downsample))
@@ -66,7 +82,8 @@ class Resnet(nn.Module):
             layers.append(block(self.inplanes, planes))
             
         return nn.Sequential(*layers)
-        
+    
+            
     def forward(self, x):
         x = self.stem(x)
         
@@ -76,6 +93,23 @@ class Resnet(nn.Module):
         x = torch.flatten(x, 1)
         x = self.fc(x)
         return x
+    
+    
+    def init_weights(self):
+        state_dict = self.state_dict()
+        param_names = list(state_dict.keys())
+
+        # Pretrained
+        pretrained_state_dict = eval(f"models.resnet{cfg.network_type}(pretrained=True)").state_dict()
+        pretrained_param_names = list(pretrained_state_dict.keys())
+        
+        # Transfer conv. parameters from pretrained model to current model
+        for i, param in enumerate(param_names[:-2]):
+            state_dict[param] = pretrained_state_dict[pretrained_param_names[i]]
+
+        self.load_state_dict(state_dict)
+
+        print("Initialize resnet from pretrained model")
     
 if __name__ == "__main__":
     resnet = Resnet()

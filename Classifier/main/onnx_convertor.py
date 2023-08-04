@@ -2,14 +2,16 @@ import torch
 import torch.onnx
 
 from config import cfg
-from base import Trainer
+from model import get_network
 
 def main():
-    trainer = Trainer()
-    trainer._make_model()
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    x = torch.randn(1, 3, cfg.input_shape[0], cfg.input_shape[1], requires_grad=True).to(trainer.device)
-    torch.onnx.export(trainer.model,               # 실행될 모델
+    model = get_network()
+    model.to(device)
+
+    x = torch.randn(1, 3, cfg.input_shape[0], cfg.input_shape[1], requires_grad=True).to(device)
+    torch.onnx.export(model,               # 실행될 모델
                   x,                         # 모델 입력값 (튜플 또는 여러 입력값들도 가능)
                   f"{cfg.network}_{cfg.network_type}.onnx",   # 모델 저장 경로 (파일 또는 파일과 유사한 객체 모두 가능)
                   export_params=True,        # 모델 파일 안에 학습된 모델 가중치를 저장할지의 여부

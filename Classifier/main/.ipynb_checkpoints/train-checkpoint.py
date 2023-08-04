@@ -14,7 +14,6 @@ def main():
         
     for epoch in range(trainer.start_epoch, cfg.num_epochs):
         trainer.model.train()
-        trainer.set_lr(epoch)
         
         total = 0
         correct = 0
@@ -29,13 +28,14 @@ def main():
             
             loss.backward()
             trainer.optimizer.step()
+            trainer.set_lr()
             
             _, predicted = torch.max(output, 1)
             total += label.size(0)
             correct += torch.sum(predicted.eq(label))
             
         acc = correct / total * 100
-        print(f"epoch: {epoch}  lr: {trainer.get_lr()}  ==>  train_loss: {loss:.4f}, train_acc: {acc:.4f}", end = " || ")
+        print(f"epoch: {epoch}/{cfg.num_epochs}  lr: {trainer.get_lr():.6f}  ==>  train_loss: {loss:.4f}, train_acc: {acc:.4f}", end = " || ")
         
         trainer.save_model({
             'epoch': epoch,

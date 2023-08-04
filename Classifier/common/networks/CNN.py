@@ -3,7 +3,7 @@ import torch.nn as nn
 from networks.modules import ConvBlock
 from config import cfg
 
-## Accuracy for Dataset ##
+## Accuracy ##
 
 # cifar10: 86.34600067138672
 

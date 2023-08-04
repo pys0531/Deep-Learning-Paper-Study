@@ -5,31 +5,36 @@ import sys
 class Config():
     
     ## Networks Info
-    network_list = {0: 'CNN', 1: 'Resnet'}
+    network_list = {0: 'CNN', 1: 'Resnet', 2: 'MobileNetV2'}
     network = network_list[1]
-    network_type = 'cifar10'#'18'#'50'
+    network_type = '50' #'18' #'50'   ## <= Can be ignored
 
     ## Training Info
-    num_epochs = 120
+    num_epochs = 25#120
     batch_size = 128#256
-    num_workers = 2
-    lr = 0.1#0.1*batch_size/256 #1e-3
+    num_workers = 16
+    lr = 1e-3 #0.1*batch_size/256 #1e-3
+    
+    ## LR Schedule Info => CosineAnnealingWarmupRestarts
+    cycle = 1#3
+    min_lr = 0.00001
+    max_lr = lr
+    gamma = 0.5
 
     ## Optim Info
     optim_list = {0: 'sgd', 1: 'adam'}
-    optim_type = optim_list[0]
+    optim_type = optim_list[1]
     momentum = 0.9
-    weight_decay = 1e-4
-    
+    weight_decay = 5e-4
     
     ## Dateset Info
     dataset_list = {0: 'cifar10', 1: 'cifar100', 2: 'stl10', 3: 'imagenet'}
-    dataset =  dataset_list[0]
+    dataset =  dataset_list[2]
 
     input_shape = {
         'cifar10': (32, 32),
         'cifar100': (32, 32),
-        'stl10': (224, 224),
+        'stl10': (96, 96),
         'imagenet': (224, 224)
     }[dataset]
     
