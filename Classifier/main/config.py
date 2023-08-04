@@ -26,6 +26,10 @@ class Config():
     optim_type = optim_list[1]
     momentum = 0.9
     weight_decay = 5e-4
+<<<<<<< HEAD
+=======
+    
+>>>>>>> dd8f8637a8b66afd50389b4778edaf3cb5871e93
     
     ## Dateset Info
     dataset_list = {0: 'cifar10', 1: 'cifar100', 2: 'stl10', 3: 'imagenet'}
