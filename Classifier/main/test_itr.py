@@ -23,8 +23,7 @@ def main():
         tester._make_model()
         tester.model.eval()
 
-        total = 0
-        correct = 0
+        total, correct = 0, 0
         for itr, (img, label) in enumerate(tester.test_batch_generator):
             img = img.to(tester.device)
             label = label.to(tester.device)
@@ -39,5 +38,24 @@ def main():
         acc = correct / total * 100
         print(f"test_loss: {loss}, test_acc: {acc}")
     
+    
+class AverageMeter(object):
+    """Computes and stores the average and current value"""
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, val, n=1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
+        self.avg = self.sum / self.count
+        
+        
 if __name__ == "__main__":
     main()

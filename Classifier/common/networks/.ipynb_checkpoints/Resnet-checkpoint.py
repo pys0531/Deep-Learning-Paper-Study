@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torchvision import models
 
-from networks.modules import ConvBlock, BasicBlock, Bottleneck
+from networks.modules.conv import ConvBlock, BasicBlock, Bottleneck
 from config import cfg
 
 ## Accuracy with CosineAnnealingWarmupRestarts ##
@@ -96,6 +96,10 @@ class Resnet(nn.Module):
     
     
     def init_weights(self):
+        if cfg.network_type == 'cifar10':
+            print(f"resnet {cfg.network_type} does not initialize to a pre-trained model.")
+            return
+        
         state_dict = self.state_dict()
         param_names = list(state_dict.keys())
 
@@ -109,7 +113,7 @@ class Resnet(nn.Module):
 
         self.load_state_dict(state_dict)
 
-        print("Initialize resnet from pretrained model")
+        print(f"Initialize resnet{cfg.network_type} from pretrained model")
     
 if __name__ == "__main__":
     resnet = Resnet()

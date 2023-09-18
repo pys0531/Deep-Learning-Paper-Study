@@ -1,3 +1,15 @@
 Classifier/data/
 Classifier/model_dump/
 Classifier/.ipynb_checkpoints/
+Detector_prev/
+Detector/data/MSCOCO
+Detector/data/PASCALVOC/.ipynb_checkpoints
+Detector/data/PASCALVOC/__pycache__
+Detector/data/PASCALVOC/VOC2007
+Detector/data/PASCALVOC/VOC2012
+Detector/data/PASCALVOC/VOCtest_06-Nov-2007.tar
+Detector/data/PASCALVOC/VOCtrainval_06-Nov-2007.tar
+Detector/data/PASCALVOC/VOCtrainval_11-May-2012.tar
+Detector/model_dump
+Detector/.ipynb_checkpoints
+Pose Estimation/

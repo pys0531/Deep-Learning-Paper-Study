@@ -90,7 +90,7 @@ class InvertedResidual(nn.Module):
         super(InvertedResidual, self).__init__()
         
         self.use_res_connect = (stride == 1) and (inplanes == planes)
-        expand_dim = inplanes * expand_ratio
+        expand_dim = int(round(inplanes * expand_ratio))
         
         layer = []
         if expand_ratio != 1:
@@ -108,3 +108,14 @@ class InvertedResidual(nn.Module):
             out += x
         return out
         
+        
+class SeparableConv(nn.Module):
+    def __init__(self, inplanes, planes, kernel_size=1, stride=1, padding=0):
+        super(SeparableConv, self).__init__()
+        self.conv = nn.Sequential(
+            ConvBlock(inplanes, inplanes, kernel_size = kernel_size, stride = stride, padding = padding, groups= inplanes, activation = nn.ReLU6),
+            nn.Conv2d(inplanes, planes, kernel_size=1),
+        )
+
+    def forward(self, x):
+        return self.conv(x)

@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from networks.modules import ConvBlock
+from networks.modules.conv import ConvBlock
 from config import cfg
 
 ## Accuracy ##

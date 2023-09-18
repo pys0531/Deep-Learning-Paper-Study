@@ -1,8 +1,7 @@
 import torch.nn as nn
-from networks.modules import ConvBlock
 from torchvision import models
 
-from networks.modules import InvertedResidual
+from networks.modules.conv import ConvBlock, InvertedResidual
 from config import cfg
 
 ## Accuracy with CosineAnnealingWarmupRestarts ##

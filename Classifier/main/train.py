@@ -3,69 +3,35 @@ import torch.backends.cudnn as cudnn
 
 from config import cfg
 from base import Trainer
+from function import train
+
+import random
+import numpy as np
 
 def main():
-    cudnn.fastest = True
-    cudnn.benchmark = True
+    ## seed 고정 => 고정해도 값이 바뀌면 lr scheduling/dropout 때문에 그럴수도 있음
+    seed = 42
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
     
+    ## 학습모델 설정
     trainer = Trainer()
     trainer._make_batch_generator()
     trainer._make_model()
         
-    for epoch in range(trainer.start_epoch, cfg.num_epochs):
-        trainer.model.train()
-        
-        total = 0
-        correct = 0
-        for itr, (img, label) in enumerate(trainer.train_batch_generator):
-            trainer.optimizer.zero_grad()
-            
-            img = img.to(trainer.device)
-            label = label.to(trainer.device)
-            
-            output = trainer.model(img)
-            loss = trainer.criterion(output, label)
-            
-            loss.backward()
-            trainer.optimizer.step()
-            trainer.set_lr()
-            
-            _, predicted = torch.max(output, 1)
-            total += label.size(0)
-            correct += torch.sum(predicted.eq(label))
-            
-        acc = correct / total * 100
-        print(f"epoch: {epoch}/{cfg.num_epochs}  lr: {trainer.get_lr():.6f}  ==>  train_loss: {loss:.4f}, train_acc: {acc:.4f}", end = " || ")
-        
-        trainer.save_model({
-            'epoch': epoch,
-            'network': trainer.model.state_dict(),
-            'optimizer': trainer.optimizer.state_dict(),
-        }, epoch)
-        
-        validation(trainer)
+    # 학습시작
+    train(trainer)
         
         
-def validation(trainer):
-    trainer.model.eval()
-    with torch.no_grad():
-        total = 0
-        correct = 0
-        for itr, (img, label) in enumerate(trainer.val_batch_generator):
-            img = img.to(trainer.device)
-            label = label.to(trainer.device)
-            
-            output = trainer.model(img)
-            loss = trainer.criterion(output, label)
-            
-            _, predicted = torch.max(output, 1)
-            total += label.size(0)
-            correct += torch.sum(predicted.eq(label))
-            
-        if total != 0:
-            acc = correct / total * 100
-            print(f"val_loss: {loss:.4f}, val_acc: {acc:.4f}")
-            
             
 if __name__ == "__main__":
     main()
+    
+    
+    
+
